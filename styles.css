@@ -216,6 +216,7 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    
 }
 
 label {
@@ -232,6 +233,7 @@ input, select {
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s;
+    font-family: Minecraftia, sans-serif;
 }
 
 input:focus, select:focus {
@@ -273,8 +275,49 @@ button {
     font-size: 1rem;
     font-weight: 600;
     transition: opacity 0.2s;
+    font-family: Minecraftia, sans-serif;
 }
 
-button:hover {
-    opacity: 0.9;
+
+/* Search Dropdown Styles */
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 6px 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    display: none; /* Hidden by default */
+}
+
+.search-results.visible {
+    display: block;
+}
+
+.search-item {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+
+.search-item:hover {
+    background-color: var(--accent-color);
+}
+
+.search-item img {
+    width: 24px;
+    height: 24px;
+    image-rendering: pixelated;
 }
