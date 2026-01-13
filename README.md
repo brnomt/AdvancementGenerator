@@ -63,7 +63,7 @@ Developed with ❤️ by:
 
 
 ## ☕ Donate
-<img width="1000" height="221" alt="Donation" href="https://www.paypal.com/donate/?hosted_button_id=GWVA5XBU7V3GL" src="https://github.com/user-attachments/assets/d7b5fe34-c620-4257-a1cb-190571f00cd4" />
+<img width="300" height="70" alt="Donation" href="https://www.paypal.com/donate/?hosted_button_id=GWVA5XBU7V3GL" src="https://github.com/user-attachments/assets/d7b5fe34-c620-4257-a1cb-190571f00cd4" />
 
 
 ## 📄 License

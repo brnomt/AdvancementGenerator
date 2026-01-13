@@ -19,7 +19,24 @@
         <div class="panel config-panel">
             
             <div class="input-group">
+                <label for="bgSelect">Achievement Style</label>
+                <select id="bgSelect">
+                    <option value="assets/Logro3.png" selected>Style 1 (Logro3)</option>
+                    <option value="assets/Logro2.png">Style 2 (Logro2)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="iconSizeInput">Icon Size: <span id="iconSizeValue">100</span>px</label>
+                <input type="range" id="iconSizeInput" min="32" max="200" value="100" style="width: 100%;">
+            </div>
+
+            <div class="input-group">
                 <label for="topText">Upper Text</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                    <label for="topFontSizeInput" style="font-size: 0.8rem; margin: 0;">Size:</label>
+                    <input type="number" id="topFontSizeInput" value="40" min="10" max="100" style="width: 60px; padding: 5px;">
+                </div>
                 <div class="text-controls">
                     <input type="text" id="topText" value="Achievement Get!">
                     <select id="topColorSelect" title="Minecraft Color"></select>
@@ -29,6 +46,10 @@
 
             <div class="input-group">
                 <label for="bottomText">Bottom Text</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                    <label for="bottomFontSizeInput" style="font-size: 0.8rem; margin: 0;">Size:</label>
+                    <input type="number" id="bottomFontSizeInput" value="40" min="10" max="100" style="width: 60px; padding: 5px;">
+                </div>
                 <div class="text-controls">
                     <input type="text" id="bottomText" value="Getting grass?...">
                     <select id="bottomColorSelect" title="Minecraft Color"></select>
@@ -81,6 +102,13 @@
         const topTextInput = document.getElementById('topText');
         const bottomTextInput = document.getElementById('bottomText');
         
+        // New Selectors
+        const bgSelect = document.getElementById('bgSelect');
+        const topFontSizeInput = document.getElementById('topFontSizeInput');
+        const bottomFontSizeInput = document.getElementById('bottomFontSizeInput');
+        const iconSizeInput = document.getElementById('iconSizeInput');
+        const iconSizeValue = document.getElementById('iconSizeValue');
+
         const iconGrid = document.getElementById('iconGrid');
         const iconSearch = document.getElementById('iconGridSearch');
         const customIconInput = document.getElementById('customIconInput');
@@ -95,7 +123,6 @@
         // Buscamos un icono inicial válido (Grass_Block o el primero de la lista)
         const initialItem = items.find(i => i.id === 'Grass_Block') || items[0];
         let currentIconData = initialItem;
-        const fontName = 'Minecraftia'; 
         
         // Colores Minecraft
         const mcColors = {
@@ -119,7 +146,7 @@
 
         // Cargar Imágenes Globales
         const bgImage = new Image();
-        bgImage.src = 'assets/Logro3.png';
+        bgImage.src = bgSelect.value;
         bgImage.onload = () => draw();
         bgImage.onerror = () => console.warn("Fondo no encontrado.");
 
@@ -244,7 +271,9 @@
             }
 
             // Icono
-            const iconSize = 100; 
+            const iconSize = parseInt(iconSizeInput.value, 10);
+            iconSizeValue.textContent = iconSize;
+
             const iconX = 50;
             const iconY = (height - iconSize) / 2;
             
@@ -254,11 +283,12 @@
             }
 
             // Texto
-            const textX = 180;
-            ctx.font = `40px "${fontName}", "Press Start 2P", monospace`;
+            const textX = iconX + iconSize + 30;
             ctx.textBaseline = 'top';
             
             // Top Text
+            const topSize = topFontSizeInput.value;
+            ctx.font = `${topSize}px "Minecraftia", "Press Start 2P", monospace`;
             ctx.fillStyle = topColorPicker.value;
             ctx.shadowColor = "#000000"; 
             ctx.shadowOffsetX = 4;
@@ -266,6 +296,8 @@
             ctx.fillText(topTextInput.value, textX, 60);
 
             // Bottom Text
+            const bottomSize = bottomFontSizeInput.value;
+            ctx.font = `${bottomSize}px "Minecraftia", "Press Start 2P", monospace`;
             ctx.fillStyle = bottomColorPicker.value;
             ctx.fillText(bottomTextInput.value, textX, 120);
             
@@ -286,6 +318,14 @@
         // Listeners
         topTextInput.addEventListener('input', draw);
         bottomTextInput.addEventListener('input', draw);
+        
+        bgSelect.addEventListener('change', () => {
+            bgImage.src = bgSelect.value;
+            // onload handles draw()
+        });
+        topFontSizeInput.addEventListener('input', draw);
+        bottomFontSizeInput.addEventListener('input', draw);
+        iconSizeInput.addEventListener('input', draw);
         
         // Init
         document.fonts.ready.then(draw);
