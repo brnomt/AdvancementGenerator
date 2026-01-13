@@ -29,6 +29,11 @@
             </div>
 
             <div class="input-group">
+                <label for="bgHueInput">Background Hue: <span id="bgHueValue">0</span>°</label>
+                <input type="range" id="bgHueInput" min="0" max="360" value="0" style="width: 100%;">
+            </div>
+
+            <div class="input-group">
                 <label for="iconSizeInput">Icon Size: <span id="iconSizeValue">100</span>px</label>
                 <input type="range" id="iconSizeInput" min="32" max="200" value="100" style="width: 100%;">
             </div>
@@ -119,6 +124,9 @@
         
         // New Selectors
         const bgSelect = document.getElementById('bgSelect');
+        const bgHueInput = document.getElementById('bgHueInput');
+        const bgHueValue = document.getElementById('bgHueValue');
+        
         const topFontSizeInput = document.getElementById('topFontSizeInput');
         const bottomFontSizeInput = document.getElementById('bottomFontSizeInput');
         const iconSizeInput = document.getElementById('iconSizeInput');
@@ -278,6 +286,14 @@
             ctx.clearRect(0, 0, width, height);
 
             // Fondo
+            const bgHue = bgHueInput.value;
+            bgHueValue.textContent = bgHue;
+            
+            ctx.save(); // Save context state
+            if (bgHue > 0) {
+                ctx.filter = `hue-rotate(${bgHue}deg)`;
+            }
+
             if (bgImage.complete && bgImage.naturalWidth > 0) {
                 ctx.drawImage(bgImage, 0, 0, width, height);
             } else {
@@ -289,6 +305,7 @@
                 ctx.fillStyle = '#333333';
                 ctx.fillRect(2, 2, width-4, height-4);
             }
+            ctx.restore(); // Restore to remove filter for next elements
 
             // Icono
             const iconSize = parseInt(iconSizeInput.value, 10);
@@ -359,6 +376,7 @@
             bgImage.src = bgSelect.value;
             // onload handles draw()
         });
+        bgHueInput.addEventListener('input', draw);
         topFontSizeInput.addEventListener('input', draw);
         bottomFontSizeInput.addEventListener('input', draw);
         iconSizeInput.addEventListener('input', draw);
