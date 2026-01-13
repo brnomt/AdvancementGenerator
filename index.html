@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Logros de Minecraft</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Generador de Logros</h1>
+
+    <div class="container">
+        <div class="input-group">
+            <label for="topText">Texto Superior (Amarillo)</label>
+            <input type="text" id="topText" value="¡Logro obtenido!">
+        </div>
+
+        <div class="input-group">
+            <label for="bottomText">Texto Inferior (Blanco)</label>
+            <input type="text" id="bottomText" value="Madera Nueva">
+        </div>
+
+        <div class="input-group">
+            <label for="iconSelect">Ícono</label>
+            <select id="iconSelect">
+                <option value="grass">Bloque de Pasto</option>
+                <option value="diamond">Diamante</option>
+                <option value="creeper">Creeper</option>
+                <option value="sword">Espada</option>
+                <option value="chest">Cofre</option>
+                <option value="book">Libro</option>
+            </select>
+        </div>
+
+        <div class="preview-area">
+            <!-- Canvas visible directly to avoid local file security restrictions with images -->
+            <canvas id="canvas" width="320" height="64" style="display: block; max-width: 100%; height: auto; image-rendering: pixelated;"></canvas>
+        </div>
+
+        <button onclick="downloadImage()">Descargar PNG</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const topTextInput = document.getElementById('topText');
+        const bottomTextInput = document.getElementById('bottomText');
+        const iconSelect = document.getElementById('iconSelect');
+
+        // Configuración
+        const fontName = 'Minecraftia'; 
+        
+        // Imagen de Fondo
+        const bgImage = new Image();
+        bgImage.src = 'assets/Logro3.png';
+        bgImage.onload = () => draw();
+        bgImage.onerror = () => console.warn("No se pudo cargar assets/Logro3.png. Usando fondo por defecto.");
+
+        function drawIcon(type, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            if (type === 'grass') {
+                ctx.fillStyle = '#7CFC00';
+                ctx.fillRect(0, 0, size, size * 0.35);
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(0, size * 0.35, size, size * 0.65);
+                ctx.fillStyle = '#5C4033'; // texture
+                ctx.fillRect(4, 16, 4, 4);
+                ctx.fillRect(20, 20, 4, 4);
+                ctx.fillStyle = '#32CD32';
+                ctx.fillRect(5, 2, 4, 4);
+                ctx.fillRect(22, 5, 4, 4);
+            } else if (type === 'diamond') {
+                ctx.fillStyle = '#00FFFF';
+                ctx.beginPath();
+                ctx.moveTo(size/2, 2);
+                ctx.lineTo(size-2, size/2);
+                ctx.lineTo(size/2, size-2);
+                ctx.lineTo(2, size/2);
+                ctx.fill();
+                ctx.fillStyle = '#E0FFFF'; // shine
+                ctx.beginPath();
+                ctx.moveTo(size/2, 6);
+                ctx.lineTo(size/2 + 4, size/2);
+                ctx.lineTo(size/2, size/2 + 4);
+                ctx.lineTo(size/2 - 4, size/2);
+                ctx.fill();
+            } else if (type === 'creeper') {
+                ctx.fillStyle = '#00AA00';
+                ctx.fillRect(2, 2, size-4, size-4);
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(6, 8, 8, 8); // eyes
+                ctx.fillRect(18, 8, 8, 8);
+                ctx.fillRect(10, 16, 12, 10); // mouth
+                ctx.fillRect(6, 20, 4, 12);
+                ctx.fillRect(22, 20, 4, 12);
+            } else if (type === 'sword') {
+                ctx.translate(size/2, size/2);
+                ctx.rotate(Math.PI / 4);
+                ctx.translate(-size/2, -size/2);
+                ctx.fillStyle = '#A9A9A9'; // Blade
+                ctx.fillRect(12, 4, 8, 20);
+                ctx.fillStyle = '#8B4513'; // Guard
+                ctx.fillRect(8, 20, 16, 4);
+                ctx.fillStyle = '#8B4513'; // Handle
+                ctx.fillRect(14, 24, 4, 6);
+            } else if (type === 'chest') {
+                 ctx.fillStyle = '#CD853F';
+                 ctx.fillRect(2, 8, size-4, size-12);
+                 ctx.fillStyle = '#A0522D';
+                 ctx.fillRect(2, 8, size-4, 4); // Lid
+                 ctx.fillStyle = '#C0C0C0';
+                 ctx.fillRect(14, 10, 4, 6); // Latch
+            } else if (type === 'book') {
+                ctx.fillStyle = '#8B4513'; // Cover
+                ctx.fillRect(6, 4, 20, 24);
+                ctx.fillStyle = '#FFFAFA'; // Pages
+                ctx.fillRect(8, 6, 16, 20);
+            }
+
+            ctx.restore();
+        }
+
+        function draw() {
+            const width = 320;
+            const height = 64;
+            // Aseguramos que el canvas tenga el tamaño correcto
+            if (canvas.width !== width) canvas.width = width;
+            if (canvas.height !== height) canvas.height = height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Dibujar Fondo
+            if (bgImage.complete && bgImage.naturalWidth > 0) {
+                ctx.drawImage(bgImage, 0, 0, width, height);
+            } else {
+                // Fallback procedural
+                ctx.fillStyle = '#212121';
+                ctx.fillRect(0, 0, width, height);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(0, 0, width, height);
+                ctx.fillStyle = '#333333';
+                ctx.fillRect(2, 2, width-4, height-4);
+            }
+
+            // 2. Dibujar Icono
+            const iconSize = 32; 
+            const iconX = 16;
+            const iconY = (height - iconSize) / 2;
+            
+            drawIcon(iconSelect.value, iconX, iconY, iconSize);
+            
+            // 3. Dibujar Texto
+            const textX = 60;
+            // Usamos la fuente definida en CSS 'Minecraftia'
+            // Fallback a 'Press Start 2P' y monospace si falla
+            ctx.font = `12px "${fontName}", "Press Start 2P", monospace`;
+            ctx.textBaseline = 'top';
+            
+            // Texto Superior (Amarillo)
+            ctx.fillStyle = '#FFFF55';
+            ctx.fillText(topTextInput.value, textX, 14);
+
+            // Texto Inferior (Blanco)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(bottomTextInput.value, textX, 36);
+        }
+
+        function downloadImage() {
+            try {
+                const link = document.createElement('a');
+                link.download = 'logro-minecraft.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (e) {
+                alert("No se pudo descargar la imagen. Si estás ejecutando esto localmente sin un servidor, el navegador puede bloquear esta acción por seguridad.");
+                console.error(e);
+            }
+        }
+
+        // Event Listeners
+        topTextInput.addEventListener('input', draw);
+        bottomTextInput.addEventListener('input', draw);
+        iconSelect.addEventListener('change', draw);
+
+        // Esperar a que la fuente del body esté lista (ya que usamos la misma)
+        document.fonts.ready.then(draw);
+
+        // Opciones del selector
+        const options = [
+            {val: 'grass', text: 'Bloque de Pasto'},
+            {val: 'diamond', text: 'Diamante'},
+            {val: 'creeper', text: 'Creeper'},
+            {val: 'sword', text: 'Espada'},
+            {val: 'chest', text: 'Cofre'},
+            {val: 'book', text: 'Libro'}
+        ];
+        iconSelect.innerHTML = options.map(o => `<option value="${o.val}">${o.text}</option>`).join('');
+
+        // Dibujado inicial
+        draw();
+
+    </script>
+</body>
+</html>
