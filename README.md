@@ -2,7 +2,7 @@
 
 A minimalist, high-performance web application to create custom Minecraft-style achievement (advancement) images. Built with modern web standards and optimized for high-resolution output.
 
-![Minecraft Advancement Preview](https://raw.githubusercontent.com/PrismarineJS/minecraft-assets/master/data/1.20.1/items/diamond.png) <!-- Example icon placeholder -->
+<img width="300" height="70" alt="minecraft-advancement__Custom Achievements!_Star the repo!_" src="https://github.com/user-attachments/assets/bd2a4769-496c-482f-a4e5-1f747edcece5" />
 
 ## ✨ Features
 
